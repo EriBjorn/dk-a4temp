@@ -1,6 +1,10 @@
 package no.ntnu.datakomm;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -18,7 +22,7 @@ public class SimpleTcpClient {
     // TCP port
     private static final int PORT = 1301;
     
-    Socket socket = new Socket(); 
+   private Socket socket = new Socket(); 
     
     
     /**
@@ -50,7 +54,7 @@ public class SimpleTcpClient {
             log("Connection to the server established");
             int a = (int) (1 + Math.random() * 10);
             int b = (int) (1 + Math.random() * 10);
-            String request = a + "+" + b;
+            String request = 2 + "+" + 3;
             if (sendRequestToServer(request)) {
                 log("Sent " + request + " to server");
                 String response = readResponseFromServer();
@@ -100,8 +104,24 @@ public class SimpleTcpClient {
      *
      * @return True on success, false otherwise
      */
-    private boolean closeConnection() {
-        return false;
+    private boolean closeConnection() 
+    {
+        boolean socketState = false; 
+        
+        try 
+        {
+            socket.close();
+            
+            socketState = true; 
+        
+        } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(SimpleTcpClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+     
+        return socketState;
     }
 
     /**
@@ -124,9 +144,6 @@ public class SimpleTcpClient {
             socket.connect(serverAddress);
             System.out.println("Successfully connected!");
             connected = true;
-        
-            socket.close();
-        
         }
         
         catch (IOException ex) 
@@ -146,8 +163,24 @@ public class SimpleTcpClient {
     private boolean sendRequestToServer(String request) 
     {
         
+        boolean messageDelivered = false;
+        String commandToSend = request + "\n";
+        
+        try
+        {
+        OutputStream out = socket.getOutputStream();
+        
+        out.write(commandToSend.getBytes());
         
         
+        messageDelivered = true; 
+        }
+            catch (IOException e)
+            {
+                System.out.println(e);
+            }
+        
+            return messageDelivered;
         
         
         // TODO - implement this method
@@ -156,7 +189,6 @@ public class SimpleTcpClient {
         // * Internet connection lost, timeout in transmission
         // * Connection not opened.
         // * What is the request is null or empty?
-        return false;
     }
 
     /**
@@ -165,10 +197,30 @@ public class SimpleTcpClient {
      * @return The response received from the server, null on error. The newline character is stripped away
      * (not included in the returned value).
      */
-    private String readResponseFromServer() {
-        // TODO - implement this method
-        // Similarly to other methods, exception can happen while trying to read the input stream of the TCP Socket
+    private String readResponseFromServer() 
+    {
+    
+        try
+        {
+            InputStream in = socket.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            
+            String response = br.readLine();
+            
+            return response;
+            
+            
+        }
+        catch (IOException e)
+        {
+            System.out.println(e);
+        }
+        
+
         return null;
+    // TODO - implement this methoda
+        // Similarly to other methods, exception can happen while trying to read the input stream of the TCP Sockes
+        
     }
 
     /**
