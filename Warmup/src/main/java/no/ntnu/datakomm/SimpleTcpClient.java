@@ -1,14 +1,26 @@
 package no.ntnu.datakomm;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+
+
 /**
  * A Simple TCP client, used as a warm-up exercise for assignment A4.
  */
 public class SimpleTcpClient {
     // Remote host where the server will be running
-    private static final String HOST = "localhost";
+    private static final String HOST = "datakomm.work";
     // TCP port
     private static final int PORT = 1301;
-
+    
+    Socket socket = new Socket(); 
+    
+    
     /**
      * Run the TCP Client.
      *
@@ -99,10 +111,30 @@ public class SimpleTcpClient {
      * @param port TCP port to use
      * @return True when connection established, false otherwise
      */
-    private boolean connectToServer(String host, int port) {
-        // TODO - implement this method
-        // Remember to catch all possible exceptions that the Socket class can throw.
-        return false;
+    private boolean connectToServer(String host, int port) 
+    {
+        
+        boolean connected = false; 
+        
+     System.out.println("Client started... ");
+        
+        InetSocketAddress serverAddress = new InetSocketAddress(host, port);
+        try 
+        {
+            socket.connect(serverAddress);
+            System.out.println("Successfully connected!");
+            connected = true;
+        
+            socket.close();
+        
+        }
+        
+        catch (IOException ex) 
+        {
+            Logger.getLogger(SimpleTcpClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+        return connected;
     }
 
     /**
@@ -111,7 +143,13 @@ public class SimpleTcpClient {
      * @param request The request message to send. Do NOT include the newline in the message!
      * @return True when message successfully sent, false on error.
      */
-    private boolean sendRequestToServer(String request) {
+    private boolean sendRequestToServer(String request) 
+    {
+        
+        
+        
+        
+        
         // TODO - implement this method
         // Hint: What can go wrong? Several things:
         // * Connection closed by remote host (server shutdown)
