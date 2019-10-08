@@ -18,9 +18,9 @@ import java.util.logging.Logger;
  */
 public class SimpleTcpClient {
     // Remote host where the server will be running
-    private static final String HOST = "datakomm.work";
+    private static final String HOST = "127.0.0.1";
     // TCP port
-    private static final int PORT = 1301;
+    private static final int PORT = 1234;
     
    private Socket socket = new Socket(); 
     
@@ -55,7 +55,7 @@ public class SimpleTcpClient {
             int a = (int) (1 + Math.random() * 10);
             int b = (int) (1 + Math.random() * 10);
             String request = 2 + "+" + 3;
-            if (sendRequestToServer(request)) {
+            if (sendRequestToServer("Hello from client")) {
                 log("Sent " + request + " to server");
                 String response = readResponseFromServer();
                 if (response != null) {
@@ -136,7 +136,6 @@ public class SimpleTcpClient {
         
         boolean connected = false; 
         
-     System.out.println("Client started... ");
         
         InetSocketAddress serverAddress = new InetSocketAddress(host, port);
         try 
@@ -164,8 +163,11 @@ public class SimpleTcpClient {
     {
         
         boolean messageDelivered = false;
-        String commandToSend = request + "\n";
         
+        
+        String commandToSend = request + "\n";
+                
+                
         try
         {
         OutputStream out = socket.getOutputStream();
@@ -174,6 +176,7 @@ public class SimpleTcpClient {
         
         
         messageDelivered = true; 
+        
         }
             catch (IOException e)
             {
