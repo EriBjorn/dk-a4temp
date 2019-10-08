@@ -12,9 +12,9 @@ public class MultiClientTest {
      */
     public static void main(String args[]) {
         log("Starting several clients to test servers multi-threading capability");
-        startNewClient();
-       // startNewClient();
-       // startNewClient();
+         startNewClient();
+         startNewClient();
+         startNewClient();
         log("Multi client app main thread done");
     }
 
